@@ -14,25 +14,23 @@ static void clear_active_bitmap_layers() {
 }
 
 void show_weeks(int current_month, int current_day, int day_of_week) {
-  if (current_day == current_day_saved) return;
+  if (current_day_saved == current_day) return;
   current_day_saved = current_day;
 
   clear_active_bitmap_layers();
   bitmap_layer_set_background_color(active_day_layers[day_of_week], GColorBlack);
 
+  int prev_month = current_month-1;
+  if (prev_month < 0) prev_month = 11;
   int start = current_day - day_of_week;
-  if (start <= 0) {
-    int prev_month = current_month-1;
-    if (prev_month < 0) prev_month = 11;
-    for (int i = start; i < (14+start); i++) {
-      int day = i;
-      if (i < 1) day = days_in_month[prev_month]+i;
-      text_layer_set_text(layers[7+i-start], days[day]);
-    }
-  } else {
-    for (int i = 0; i < 14; i++) {
-      text_layer_set_text(layers[7+i], days[start+i]);
-    }
+
+  for (int i = 0; i < 14; i++) {
+    int day = start+i;
+    if (day < 1) 
+      day = days_in_month[prev_month]+i+start;
+    else if (days_in_month[current_month] < day) 
+      day = day - days_in_month[current_month];
+    text_layer_set_text(layers[7+i], days[day]);
   }
 
   text_layer_set_text_color(layers[7+day_of_week], GColorWhite);
