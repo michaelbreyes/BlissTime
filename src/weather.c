@@ -6,22 +6,8 @@ static TextLayer *weather_layer;
 static weather_t weather;
 
 enum {
-  WEATHER_MESSAGE_ICON_ID = 0,
-  WEATHER_MESSAGE_TEMP_KELVIN = 1,
-  WEATHER_MESSAGE_TEMP_CELSIUS = 2,
-  WEATHER_MESSAGE_TEMP_FAHRENHEIT = 3
-};
-
-enum {
-  WEATHER_ICON_CLEAR_DAY,
-  WEATHER_ICON_CLEAR_NIGHT,
-  WEATHER_ICON_CLOUDY,
-  WEATHER_ICON_SHOWER_RAIN,
-  WEATHER_ICON_RAIN,
-  WEATHER_ICON_THUNDERSTORM,
-  WEATHER_ICON_SNOW,
-  WEATHER_ICON_MIST,
-  WEATHER_ICON_ERROR
+  WEATHER_MESSAGE_ICON = 0,
+  WEATHER_MESSAGE_TEMP = 1
 };
 
 static char* weather_condition(int icon) {
@@ -38,38 +24,31 @@ static char* weather_condition(int icon) {
 
 /** message from PebbleKit JS received */
 static void on_received_handler(DictionaryIterator *received, void *context) {
-  Tuple *icon_id = dict_find(received, WEATHER_MESSAGE_ICON_ID);
-  Tuple *temp_kelvin = dict_find(received, WEATHER_MESSAGE_TEMP_KELVIN);
-  Tuple *temp_celsius = dict_find(received, WEATHER_MESSAGE_TEMP_CELSIUS);
-  Tuple *temp_fahrenheit = dict_find(received, WEATHER_MESSAGE_TEMP_FAHRENHEIT);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "Received weather info");
+  Tuple *icon = dict_find(received, WEATHER_MESSAGE_ICON);
+  Tuple *temp = dict_find(received, WEATHER_MESSAGE_TEMP);
 
   // update weather
-  if(icon_id && temp_kelvin && temp_celsius && temp_fahrenheit) {
-    weather.icon_id = icon_id->value->int8;
-    weather.temp_kelvin = temp_kelvin->value->int8;
-    weather.temp_celsius = temp_celsius->value->int8;
-    weather.temp_fahrenheit = temp_fahrenheit->value->int8;
+  if (icon && temp) {
+    weather.icon = icon->value->int8;
+    weather.temp = temp->value->int8;
   } else {
-    weather.icon_id = WEATHER_ICON_ERROR;
-    weather.temp_kelvin = 0;
-    weather.temp_celsius = 0;
-    weather.temp_fahrenheit = 0;
+    weather.icon = 0;
+    weather.temp = 0;
   }
 
   char *temp_string = "XXXXX";
-  char *condition = weather_condition(weather.icon_id);
+  char *condition = weather_condition(weather.icon);
 
-  snprintf(temp_string, sizeof("-137° stormy"), condition, weather.temp_fahrenheit);
-
+  snprintf(temp_string, sizeof("-137° stormy"), condition, weather.temp);
+  APP_LOG(APP_LOG_LEVEL_DEBUG, temp_string);
   text_layer_set_text(weather_layer, temp_string);
 }
 
 void weather_init() {
   weather = (weather_t) {
-    .icon_id = WEATHER_ICON_ERROR,
-    .temp_kelvin = 0,
-    .temp_celsius = 0,
-    .temp_fahrenheit = 0
+    .icon = 0,
+    .temp = 0
   };
 
   weather_layer = text_layer_create(GRect(2,-3,107,23));

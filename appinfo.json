@@ -1,44 +1,38 @@
 {
-	"uuid": "a812784b-59b5-4541-a54e-7f3929a3ce7e",
-	"shortName": "Bliss Time",
-	"longName": "Bliss Time",
-	"companyName": "LittleGuyApps",
-	"versionCode": 1,
-	"versionLabel": "1.0.0",
-	"watchapp": {
-		"watchface": true
-	},
-	"capabilities": [
-		"location"
-	],
-	"appKeys": {
-		"icon_id": 0,
-		"temp_kelvin": 1,
-		"temp_celsius": 2,
-		"temp_fahrenheit": 3
-	},
-	"resources": {
-		"media": [
-	        {
-	            "type": "font",
-	            "name": "FONT_DROIDSANS_12",
-	            "file": "fonts/DroidSans_12.ttf"
-	        },
-	        {
-	            "type": "font",
-	            "name": "FONT_DROIDSANS_13",
-	            "file": "fonts/DroidSans_13.ttf"
-	        },
-	        {
-	            "type": "font",
-	            "name": "FONT_DROIDSANS_18",
-	            "file": "fonts/DroidSans_18.ttf"
-	        },
-	        {
-	            "type": "font",
-	            "name": "FONT_DROIDSANS_38",
-	            "file": "fonts/DroidSans_38.ttf"
-	        }
-            ]
-	}
+  "uuid": "abc04a86-4662-4792-90a8-869e4552662a",
+  "shortName": "Bliss Time",
+  "longName": "Bliss Time",
+  "companyName": "LittleGuyApps",
+  "versionCode": 1,
+  "versionLabel": "1.0.0",
+  "watchapp": {
+    "watchface": true
+  },
+  "capabilities": [
+    "location"
+  ],
+  "resources": {
+    "media": [
+      {
+        "type": "font",
+        "name": "FONT_DROIDSANS_12",
+        "file": "fonts/DroidSans_12.ttf"
+      },
+      {
+        "type": "font",
+        "name": "FONT_DROIDSANS_13",
+        "file": "fonts/DroidSans_13.ttf"
+      },
+      {
+        "type": "font",
+        "name": "FONT_DROIDSANS_18",
+        "file": "fonts/DroidSans_18.ttf"
+      },
+      {
+        "type": "font",
+        "name": "FONT_DROIDSANS_38",
+        "file": "fonts/DroidSans_38.ttf"
+      }
+    ]
+  }
 }

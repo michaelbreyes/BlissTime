@@ -1,10 +1,8 @@
 #pragma once
 
 typedef struct {
-  int icon_id;
-  int temp_kelvin;
-  int temp_celsius;
-  int temp_fahrenheit;
+  int icon;
+  int temp;
 } weather_t;
 
 void weather_init(void);

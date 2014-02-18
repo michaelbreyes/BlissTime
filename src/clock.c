@@ -4,6 +4,7 @@
 
 #define CLOCK_POS 52
 
+static bool date_shown = false;
 static TextLayer *clock_layer1;
 static TextLayer *clock_layer2;
 static TextLayer *clock_layer3;
@@ -40,7 +41,10 @@ static void show_time(struct tm *tick_time) {
   text_layer_set_text(clock_layer2, min_str1);
   text_layer_set_text(clock_layer3, min_str2); 
 
-  show_weeks(tick_time->tm_mon,tick_time->tm_mday,tick_time->tm_wday);
+  if (min == 0 || !date_shown) {
+    show_weeks(tick_time->tm_mon,tick_time->tm_mday,tick_time->tm_wday);
+    date_shown = true;
+  }
 }
 
 static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
