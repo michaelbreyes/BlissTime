@@ -13,9 +13,10 @@ static void clear_active_bitmap_layers() {
   }
 }
 
-void show_weeks(int current_month, int current_day, int day_of_week) {
+void show_weeks(int current_month, int current_day, int day_of_week, int current_year) {
   if (current_day_saved == current_day) return;
   current_day_saved = current_day;
+  if (((current_year % 4 == 0) && (current_year % 100 != 0)) || (current_year % 400 == 0)) days_in_month[1] = 29;
 
   clear_active_bitmap_layers();
   bitmap_layer_set_background_color(active_day_layers[day_of_week], GColorBlack);

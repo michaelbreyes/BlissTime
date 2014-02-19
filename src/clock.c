@@ -42,7 +42,7 @@ static void show_time(struct tm *tick_time) {
   text_layer_set_text(clock_layer3, min_str2); 
 
   if (min == 0 || !date_shown) {
-    show_weeks(tick_time->tm_mon,tick_time->tm_mday,tick_time->tm_wday);
+    show_weeks(tick_time->tm_mon,tick_time->tm_mday,tick_time->tm_wday,tick_time->tm_year);
     date_shown = true;
   }
 }
