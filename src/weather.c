@@ -40,7 +40,7 @@ static void on_received_handler(DictionaryIterator *received, void *context) {
   char *temp_string = "XXXXX";
   char *condition = weather_condition(weather.icon);
 
-  snprintf(temp_string, sizeof("-137° stormy"), condition, weather.temp);
+  snprintf(temp_string, sizeof("-137x stormy"), condition, weather.temp);
   APP_LOG(APP_LOG_LEVEL_DEBUG, temp_string);
   text_layer_set_text(weather_layer, temp_string);
 }
