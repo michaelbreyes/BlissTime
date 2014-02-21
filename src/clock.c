@@ -54,10 +54,10 @@ static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
 void clock_init() {
   clock_layer1 = text_layer_create(GRect(5,CLOCK_POS,150,50));
   setup_text_layer(clock_layer1, RESOURCE_ID_FONT_DROIDSANS_38);
-  clock_layer2 = text_layer_create(GRect(5,CLOCK_POS+33,150,50));
-  setup_text_layer(clock_layer2, RESOURCE_ID_FONT_DROIDSANS_38);
+  clock_layer2 = text_layer_create(GRect(5,CLOCK_POS+33,175,50));
+  setup_text_layer(clock_layer2, RESOURCE_ID_FONT_DROIDSANS_37);
   clock_layer3 = text_layer_create(GRect(5,CLOCK_POS+66,150,50));
-  setup_text_layer(clock_layer3, RESOURCE_ID_FONT_DROIDSANS_38);
+  setup_text_layer(clock_layer3, RESOURCE_ID_FONT_DROIDSANS_37);
   text_layer_set_text_color(clock_layer1, GColorWhite);
   text_layer_set_text_color(clock_layer2, GColorWhite);
   text_layer_set_text_color(clock_layer3, GColorWhite);
