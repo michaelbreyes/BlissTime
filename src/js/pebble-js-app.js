@@ -1,7 +1,8 @@
 SECOND = 1000;
 MINUTE = SECOND * 60;
-
 API_URL = "http://api.openweathermap.org/data/2.5/weather?lat={0}&lon={1}&mode=json";
+
+var options = getOptions();
 
 get_location_and_show_weather = function() {
   navigator.geolocation.getCurrentPosition(function(e) {
@@ -19,15 +20,17 @@ get_weather = function(longitude, latitude) {
   
   request.onload = function(e) {
     if(request.readyState == 4 && request.status == 200) {
-      var response = JSON.parse(request.responseText);
-      
       console.log("ANSWER FROM SERVER: " + request.responseText);
-      
+      var response = JSON.parse(request.responseText),
+          temp = (options.temperature === "F")
+                  ? convert_kelvin_to_fahrenheit(Number(response.main.temp)).toFixed(0)
+                  : convert_kelvin_to_celsius(Number(response.main.temp)).toFixed(0);
+
       var pebble_data = {
-        "0": get_icon_id(response.weather[0].icon),
+        "target": 0,
+        "icon": get_icon_id(response.weather[0].icon),
+        "temperature": Number(temp)
         // "temp_kelvin": Number(Number(response.main.temp).toFixed(0)),
-        // "temp_celsius": Number(convert_kelvin_to_celsius(Number(response.main.temp)).toFixed(0)),
-        "1": Number(convert_kelvin_to_fahrenheit(Number(response.main.temp)).toFixed(0))
       };
       
       // send date to pebble

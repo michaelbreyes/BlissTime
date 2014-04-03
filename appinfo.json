@@ -8,6 +8,11 @@
   "watchapp": {
     "watchface": true
   },
+  "appKeys": {
+    "target": 0,
+    "icon": 1,
+    "temperature": 2
+  },
   "capabilities": [
     "location",
     "configurable"

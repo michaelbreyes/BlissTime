@@ -6,8 +6,8 @@ static TextLayer *weather_layer;
 static weather_t weather;
 
 enum {
-  WEATHER_MESSAGE_ICON = 0,
-  WEATHER_MESSAGE_TEMP = 1
+  WEATHER_MESSAGE_ICON = 0x1,
+  WEATHER_MESSAGE_TEMP = 0x2
 };
 
 static char* weather_condition(int icon) {
@@ -22,9 +22,7 @@ static char* weather_condition(int icon) {
   }
 }
 
-/** message from PebbleKit JS received */
-static void on_received_handler(DictionaryIterator *received, void *context) {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "Received weather info");
+void receive_weather_data(DictionaryIterator *received) {
   Tuple *icon = dict_find(received, WEATHER_MESSAGE_ICON);
   Tuple *temp = dict_find(received, WEATHER_MESSAGE_TEMP);
 
@@ -54,9 +52,6 @@ void weather_init() {
   weather_layer = text_layer_create(GRect(2,-3,107,23));
   setup_text_layer(weather_layer, RESOURCE_ID_FONT_DROIDSANS_18);
   text_layer_set_text(weather_layer, "no weather");
-
-  app_message_open(64, 16);
-  app_message_register_inbox_received(on_received_handler);
 }
 
 void weather_deinit() {
