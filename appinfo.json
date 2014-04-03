@@ -9,7 +9,8 @@
     "watchface": true
   },
   "capabilities": [
-    "location"
+    "location",
+    "configurable"
   ],
   "resources": {
     "media": [
