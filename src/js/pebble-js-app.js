@@ -108,11 +108,7 @@ Pebble.addEventListener("ready", function(e) {
 });
 
 function getOptions() {
-  var /*options = localStorage.getItem('options');
-  if (options) {
-    options = JSON.parse(options);
-  } else {*/
-    options = 
+  var options = JSON.parse(localStorage.getItem('options')) ||
       {
         'temperature': 'F',
         'timeformat': 'N',
@@ -128,24 +124,18 @@ function getOptions() {
         'friday': true,
         'saturday': false
       };
-  //}
   return options;
 }
 
 Pebble.addEventListener("showConfiguration", function(e) {
-  console.log("showConfiguration Event");
-  console.log("stringified options is " + JSON.stringify(getOptions()));
-  Pebble.openURL("http://www.google.com");
-  // Pebble.openURL("http://dl.dropboxusercontent.com/s/gt0vum2cykv36su/blisstime-config.html?token_hash=AAFg9_q8p44m9FulzovjUSn_OLM9dW-blcFr63rh_y5rJA" +
-  //          "&options=" + JSON.stringify(getOptions()));
+  var json = JSON.stringify(getOptions()),
+      htmlPath = "http://dl.dropboxusercontent.com/s/gt0vum2cykv36su/blisstime-config.html",
+      url = htmlPath + "?options=" + encodeURIComponent(json);
+  Pebble.openURL(url);
 });
 
 Pebble.addEventListener("webviewclosed", function(e) {
-  console.log("Configuration window closed");
-  console.log(e.type);
-  console.log(e.response);
-
   var options = JSON.parse(e.response);
-  localStorage.setItem("options", options);
+  localStorage.setItem("options", e.response);
   Pebble.sendAppMessage(options);
 });
