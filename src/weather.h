@@ -5,6 +5,6 @@ typedef struct {
   int temp;
 } weather_t;
 
-void receive_weather_data(DictionaryIterator*);
+void receive_weather_data(int, int);
 void weather_init(void);
 void weather_deinit(void);

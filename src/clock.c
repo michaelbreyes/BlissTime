@@ -8,7 +8,15 @@ static bool date_shown = false;
 static TextLayer *clock_layer1;
 static TextLayer *clock_layer2;
 static TextLayer *clock_layer3;
+static TextLayer *clock_layer4; // Digital only
 static char singles[17][8] = { "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen" };
+static int clock_mode = 0; // 0 Non-digital, 1 Digital
+static int buzz_freq = 0;
+static int buzz_offset = 0;
+static int buzz_start = 0;
+static int buzz_end = 0;
+static int buzz_on_days[7] = {0,0,0,0,0,0,0};
+static struct tm *clock_time;
 
 static char* get_double_unit_name(int num) {
   if (num < 10) return "o'";
@@ -18,14 +26,14 @@ static char* get_double_unit_name(int num) {
   return "fifty";
 }
 
-static void show_time(struct tm *tick_time) {
-  int hour = tick_time->tm_hour;
-  int min = tick_time->tm_min;
+static void display_time_nondigital() {
+  int hour = clock_time->tm_hour;
+  int min = clock_time->tm_min;
   if (hour == 0) hour = 12;
   if (hour > 12) hour = hour - 12;
+
   char *min_str1 = "";
   char *min_str2 = "";
-  text_layer_set_text(clock_layer1, singles[hour]);
   if (min == 0) {
     min_str1 = "o'";
     min_str2 = "clock";
@@ -38,17 +46,96 @@ static void show_time(struct tm *tick_time) {
     min_str1 = singles[min%10];
     min_str2 = "teen";
   }
-  text_layer_set_text(clock_layer2, min_str1);
-  text_layer_set_text(clock_layer3, min_str2); 
 
-  if (min == 0 || !date_shown) {
+  text_layer_set_text(clock_layer1, singles[hour]);
+  text_layer_set_text(clock_layer2, min_str1);
+  text_layer_set_text(clock_layer3, min_str2);
+  text_layer_set_text(clock_layer4, "");
+}
+
+static void display_time_digital() {
+  static char hour_text[] = "xx:xx";
+
+  strftime(hour_text, sizeof(hour_text), "%I:%M", clock_time);
+  // This is a hack to get rid of the leading zero.
+  if(hour_text[0] == '0') memmove(&hour_text[0], &hour_text[1], sizeof(hour_text) - 1);
+
+  text_layer_set_text(clock_layer1, "");
+  text_layer_set_text(clock_layer2, "");
+  text_layer_set_text(clock_layer3, "");
+  text_layer_set_text(clock_layer4, hour_text);
+}
+
+static void display_time() {
+  if (clock_mode == 0) {
+    display_time_nondigital();
+  } else {
+    display_time_digital();
+  }
+}
+
+static void show_time(struct tm *tick_time) {
+  clock_time = tick_time;
+  display_time();
+
+  if (tick_time->tm_min == 0 || !date_shown) {
     show_weeks(tick_time->tm_mon,tick_time->tm_mday,tick_time->tm_wday,tick_time->tm_year);
     date_shown = true;
   }
 }
 
+static void do_buzz(struct tm *time) {
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "do_buzz entered");
+  // Stop if buzzing is off
+  if (buzz_freq == 0) {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "buzz_freq is 0");
+    return;
+  }
+  int hour = time->tm_hour;
+  int min = time->tm_min;
+  int day = time->tm_wday;
+  if (min == 0) min = 60;
+
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "about to check if not for day");
+  // Stop if not on for the day
+  if (buzz_on_days[day] == 0) return;
+
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "about to check if within time range");
+  // Stop if not within time range
+  if (hour < buzz_start || hour > buzz_end) return;
+
+  // Stop if not at offset
+  int buzz_min = 60;
+  if (buzz_freq == 1) buzz_min = 30;
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "about to check offset");
+  if ((min+buzz_offset) % buzz_min != 0) return;
+
+  APP_LOG(APP_LOG_LEVEL_DEBUG, "should buzz");
+  vibes_double_pulse();
+}
+
 static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
   show_time(tick_time);
+  do_buzz(tick_time);
+}
+
+void configure_buzz(int freq, int lead_time, int start, int end, int sun, int mon, int tue, int wed, int thu, int fri, int sat) {
+  buzz_freq = freq;
+  buzz_offset = lead_time;
+  buzz_start = start;
+  buzz_end = end;
+  buzz_on_days[0] = sun;
+  buzz_on_days[1] = mon;
+  buzz_on_days[2] = tue;
+  buzz_on_days[3] = wed;
+  buzz_on_days[4] = thu;
+  buzz_on_days[5] = fri;
+  buzz_on_days[6] = sat;
+}
+
+void configure_clock(int mode) {
+  clock_mode = mode;
+  display_time();
 }
 
 void clock_init() {
@@ -58,10 +145,14 @@ void clock_init() {
   setup_text_layer(clock_layer2, RESOURCE_ID_FONT_DROIDSANS_37);
   clock_layer3 = text_layer_create(GRect(5,CLOCK_POS+66,150,50));
   setup_text_layer(clock_layer3, RESOURCE_ID_FONT_DROIDSANS_37);
+  clock_layer4 = text_layer_create(GRect(0,CLOCK_POS+23,144,60));
+  setup_text_layer(clock_layer4, RESOURCE_ID_FONT_EXO_50);
+  text_layer_set_text_alignment(clock_layer4, GTextAlignmentCenter);
   text_layer_set_text_color(clock_layer1, GColorWhite);
   text_layer_set_text_color(clock_layer2, GColorWhite);
   text_layer_set_text_color(clock_layer3, GColorWhite);
-  
+  text_layer_set_text_color(clock_layer4, GColorWhite);
+
   // subscription
   time_t now = time(NULL);
   struct tm *tick_time;

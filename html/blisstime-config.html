@@ -32,8 +32,8 @@
 				Temperature
 			</label>
 			<select id="temperature" name="temperature" data-native-menu="true" data-mini="true">
-				<option value="F">Farenheit</option>
-				<option value="C">Celcius</option>
+				<option value="0">Farenheit</option>
+				<option value="1">Celcius</option>
 			</select>
 		</div>
 
@@ -42,8 +42,8 @@
 				Time Format
 			</label>
 			<select id="timeformat" name="timeformat" data-native-menu="true" data-mini="true">
-				<option value="N">Non-Digital</option>
-				<option value="D">Digital</option>
+				<option value="0">Non-Digital</option>
+				<option value="1">Digital</option>
 			</select>
 		</div>
 
@@ -155,19 +155,19 @@
 <script>
 function getOptions() {
 	var options = {
-		'temperature': $("#temperature").val(),
-		'timeformat': $("#timeformat").val(),
+		'temperature': parseInt($("#temperature").val(), 10),
+		'timeformat': parseInt($("#timeformat").val(), 10),
 		'buzzfreq': parseInt($("#buzzfreq").val(), 10),
 		'leadtime': parseInt($("#leadtime").val(), 10),
 		'from': parseInt($("#from").val(), 10),
 		'to': parseInt($("#to").val(), 10),
-		'sunday': $("#sunday").is(':checked'),
-		'monday': $("#monday").is(':checked'),
-		'tuesday': $("#tuesday").is(':checked'),
-		'wednesday': $("#wednesday").is(':checked'),
-		'thursday': $("#thursday").is(':checked'),
-		'friday': $("#friday").is(':checked'),
-		'saturday': $("#saturday").is(':checked')
+		'sunday': $("#sunday").is(':checked') ? 1 : 0,
+		'monday': $("#monday").is(':checked') ? 1 : 0,
+		'tuesday': $("#tuesday").is(':checked') ? 1 : 0,
+		'wednesday': $("#wednesday").is(':checked') ? 1 : 0,
+		'thursday': $("#thursday").is(':checked') ? 1 : 0,
+		'friday': $("#friday").is(':checked') ? 1 : 0,
+		'saturday': $("#saturday").is(':checked') ? 1 : 0
 	}
 	return options;
 }

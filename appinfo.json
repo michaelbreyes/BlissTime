@@ -11,7 +11,20 @@
   "appKeys": {
     "target": 0,
     "icon": 1,
-    "temperature": 2
+    "degrees": 2,
+    "temperature": 3,
+    "timeformat": 4,
+    "buzzfreq": 5,
+    "leadtime": 6,
+    "from": 7,
+    "to": 8,
+    "sunday": 9,
+    "monday": 10,
+    "tuesday": 11,
+    "wednesday": 12,
+    "thursday": 13,
+    "friday": 14,
+    "saturday": 15
   },
   "capabilities": [
     "location",
@@ -43,6 +56,11 @@
         "type": "font",
         "name": "FONT_DROIDSANS_38",
         "file": "fonts/DroidSans_38.ttf"
+      },
+      {
+        "type": "font",
+        "name": "FONT_EXO_50",
+        "file": "fonts/Exo_50.ttf"
       }
     ]
   }

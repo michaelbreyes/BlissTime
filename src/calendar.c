@@ -32,6 +32,7 @@ void show_weeks(int current_month, int current_day, int day_of_week, int current
     else if (days_in_month[current_month] < day) 
       day = day - days_in_month[current_month];
     text_layer_set_text(layers[7+i], days[day]);
+    text_layer_set_text_color(layers[7+i], GColorBlack);
   }
 
   text_layer_set_text_color(layers[7+day_of_week], GColorWhite);

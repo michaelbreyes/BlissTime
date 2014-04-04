@@ -5,11 +5,6 @@
 static TextLayer *weather_layer;
 static weather_t weather;
 
-enum {
-  WEATHER_MESSAGE_ICON = 0x1,
-  WEATHER_MESSAGE_TEMP = 0x2
-};
-
 static char* weather_condition(int icon) {
   switch (icon) {
     case 1: return "%d° clear";
@@ -22,24 +17,14 @@ static char* weather_condition(int icon) {
   }
 }
 
-void receive_weather_data(DictionaryIterator *received) {
-  Tuple *icon = dict_find(received, WEATHER_MESSAGE_ICON);
-  Tuple *temp = dict_find(received, WEATHER_MESSAGE_TEMP);
-
-  // update weather
-  if (icon && temp) {
-    weather.icon = icon->value->int8;
-    weather.temp = temp->value->int8;
-  } else {
-    weather.icon = 0;
-    weather.temp = 0;
-  }
+void receive_weather_data(int icon, int temp) {
+  weather.icon = icon;
+  weather.temp = temp;
 
   char *temp_string = "XXXXX";
   char *condition = weather_condition(weather.icon);
 
   snprintf(temp_string, sizeof("-137x stormy"), condition, weather.temp);
-  APP_LOG(APP_LOG_LEVEL_DEBUG, temp_string);
   text_layer_set_text(weather_layer, temp_string);
 }
 
