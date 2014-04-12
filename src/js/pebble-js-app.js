@@ -1,6 +1,7 @@
 SECOND = 1000;
 MINUTE = SECOND * 60;
 API_URL = "http://api.openweathermap.org/data/2.5/weather?lat={0}&lon={1}&mode=json";
+API_CONFIG = "http://pebble-blisstime.azurewebsites.net/config.html";
 
 var customOptions = getOptions(),
     tempInKelvin = 0,
@@ -133,8 +134,7 @@ function getOptions() {
 
 Pebble.addEventListener("showConfiguration", function(e) {
   var json = JSON.stringify(getOptions()),
-      htmlPath = "http://dl.dropboxusercontent.com/s/gt0vum2cykv36su/blisstime-config.html",
-      url = htmlPath + "?options=" + encodeURIComponent(json);
+      url = API_CONFIG + "?options=" + encodeURIComponent(json);
   Pebble.openURL(url);
 });
 

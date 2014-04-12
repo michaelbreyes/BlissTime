@@ -17,6 +17,17 @@ static int buzz_start = 0;
 static int buzz_end = 0;
 static int buzz_on_days[7] = {0,0,0,0,0,0,0};
 static struct tm *clock_time;
+// Buzz patterns
+static const uint32_t const double_segments[] = { 200, 200, 200 };
+VibePattern double_vibe_pattern = {
+  .durations = double_segments,
+  .num_segments = ARRAY_LENGTH(double_segments),
+};
+static const uint32_t const triple_segments[] = { 200, 200, 200, 200, 200 };
+VibePattern triple_vibe_pattern = {
+  .durations = triple_segments,
+  .num_segments = ARRAY_LENGTH(triple_segments),
+};
 
 static char* get_double_unit_name(int num) {
   if (num < 10) return "o'";
@@ -85,10 +96,8 @@ static void show_time(struct tm *tick_time) {
 }
 
 static void do_buzz(struct tm *time) {
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "do_buzz entered");
   // Stop if buzzing is off
   if (buzz_freq == 0) {
-    APP_LOG(APP_LOG_LEVEL_DEBUG, "buzz_freq is 0");
     return;
   }
   int hour = time->tm_hour;
@@ -96,13 +105,13 @@ static void do_buzz(struct tm *time) {
   int day = time->tm_wday;
   if (min == 0) min = 60;
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "about to check if not for day");
   // Stop if not on for the day
   if (buzz_on_days[day] == 0) return;
 
   APP_LOG(APP_LOG_LEVEL_DEBUG, "about to check if within time range");
   // Stop if not within time range
-  if (hour < buzz_start || hour > buzz_end) return;
+  if ((hour == (buzz_start-1) && (min+buzz_offset != 60)) || hour < (buzz_start-1)) return;
+  if ((hour == buzz_end && buzz_offset != 0) || hour > buzz_end) return;
 
   // Stop if not at offset
   int buzz_min = 60;
@@ -110,8 +119,14 @@ static void do_buzz(struct tm *time) {
   APP_LOG(APP_LOG_LEVEL_DEBUG, "about to check offset");
   if ((min+buzz_offset) % buzz_min != 0) return;
 
-  APP_LOG(APP_LOG_LEVEL_DEBUG, "should buzz");
-  vibes_double_pulse();
+  if (min+buzz_offset == 60) {
+    // Triple buzz on the hour
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "should triple buzz");
+    vibes_enqueue_custom_pattern(triple_vibe_pattern);
+  } else {
+    APP_LOG(APP_LOG_LEVEL_DEBUG, "should buzz");
+    vibes_enqueue_custom_pattern(double_vibe_pattern);
+  }
 }
 
 static void handle_clock_tick(struct tm *tick_time, TimeUnits units_changed) {
