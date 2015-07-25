@@ -107,6 +107,7 @@ Pebble.addEventListener("ready", function(e) {
   customOptions.icon = 0;
   customOptions.degrees = 0;
   Pebble.sendAppMessage(customOptions);
+  console.log("Js ready: " + JSON.stringify(customOptions));
   setTimeout(function() {
     get_location_and_show_weather();
   }, 1000);

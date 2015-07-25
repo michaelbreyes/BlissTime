@@ -10,7 +10,7 @@ static TextLayer *clock_layer2;
 static TextLayer *clock_layer3;
 static TextLayer *clock_layer4; // Digital only
 static char singles[17][8] = { "", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen" };
-static int clock_mode = 0; // 0 Non-digital, 1 Digital
+static int clock_mode = 0; // 0 Non-digital, 1 Digital, 2 Digital 24h
 static int buzz_freq = 0;
 static int buzz_offset = 0;
 static int buzz_start = 0;
@@ -67,7 +67,11 @@ static void display_time_nondigital() {
 static void display_time_digital() {
   static char hour_text[] = "xx:xx";
 
-  strftime(hour_text, sizeof(hour_text), "%I:%M", clock_time);
+  if (clock_mode == 1) {
+    strftime(hour_text, sizeof(hour_text), "%I:%M", clock_time);
+  } else {
+    strftime(hour_text, sizeof(hour_text), "%H:%M", clock_time);
+  }
   // This is a hack to get rid of the leading zero.
   if(hour_text[0] == '0') memmove(&hour_text[0], &hour_text[1], sizeof(hour_text) - 1);
 
