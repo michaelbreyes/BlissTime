@@ -7,6 +7,14 @@ Bliss Time
 
 [Click here to view the app in the Pebble app store](https://apps.getpebble.com/applications/5301aed6d1653b8d5e000380)
 
+## Features
+
+* Time displayed in spelled out format or digitally
+* 2 week calendar view
+* Temperature in either fahrenheit or celcius along with description of weather conditions
+* Watch battery percentage
+* Configurable buzzing every hour or half hour, helps you avoid being late for meetings
+
 ## How to build and install "Bliss Time"
 
 Use the Pebble SDKs "pebble" command:
