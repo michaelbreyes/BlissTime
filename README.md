@@ -1,7 +1,7 @@
 Bliss Time
 ===================
 
-![Bliss Time screenshot](https://assets.getpebble.com/api/file/Xqt39DzToCi6NiUhPX0A/convert?cache=true&fit=crop&w=144&h=168)
+![Bliss Time screenshot](https://m2.behance.net/rendition/pm/28196669/disp/67cb11c6b149cbe1f6536547d869c19d.png)
 
 ## Pebble SDK 2.0 required
 
